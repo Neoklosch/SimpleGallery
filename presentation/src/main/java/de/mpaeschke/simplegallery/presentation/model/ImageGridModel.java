@@ -2,7 +2,6 @@ package de.mpaeschke.simplegallery.presentation.model;
 
 import java.util.ArrayList;
 
-import de.mpaeschke.simplegallery.data.entity.mapper.ImageEntityDataMapper;
 import de.mpaeschke.simplegallery.data.repository.ImageListDataRepository;
 import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStoreFactory;
 import de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity;
@@ -30,8 +29,7 @@ public class ImageGridModel implements ImageGridMVPModel {
 
     private void setUseCase() {
         ImageDataStoreFactory imageDataStoreFactory = new ImageDataStoreFactory();
-        ImageEntityDataMapper imageEntityDataMapper = new ImageEntityDataMapper();
-        ImageListDataRepository imageListDataRepository = ImageListDataRepository.getInstance(imageDataStoreFactory, imageEntityDataMapper);
+        ImageListDataRepository imageListDataRepository = ImageListDataRepository.getInstance(imageDataStoreFactory);
         mImageUseCase = new GetImageUseCaseImpl(imageListDataRepository);
     }
 

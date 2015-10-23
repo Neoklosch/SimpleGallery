@@ -15,24 +15,21 @@ import de.mpaeschke.simplegallery.domain.repository.ImageRepository;
 public class ImageListDataRepository implements ImageRepository {
     private static ImageListDataRepository INSTANCE;
 
-    public static synchronized ImageListDataRepository getInstance(ImageDataStoreFactory imageDataStoreFactory, ImageEntityDataMapper imageEntityDataMapper) {
+    public static synchronized ImageListDataRepository getInstance(ImageDataStoreFactory imageDataStoreFactory) {
         if (INSTANCE == null) {
-            INSTANCE = new ImageListDataRepository(imageDataStoreFactory, imageEntityDataMapper);
+            INSTANCE = new ImageListDataRepository(imageDataStoreFactory);
         }
         return INSTANCE;
     }
 
-
     private final ImageDataStoreFactory mImageDataStoreFactory;
-    private final ImageEntityDataMapper mImageEntityDataMapper;
 
-    protected ImageListDataRepository(ImageDataStoreFactory imageDataStoreFactory, ImageEntityDataMapper imageEntityDataMapper) {
-        if (imageDataStoreFactory == null || imageEntityDataMapper == null) {
+    protected ImageListDataRepository(ImageDataStoreFactory imageDataStoreFactory) {
+        if (imageDataStoreFactory == null) {
             throw new IllegalArgumentException("Invalid null parameters in constructor!");
         }
 
         mImageDataStoreFactory = imageDataStoreFactory;
-        mImageEntityDataMapper = imageEntityDataMapper;
     }
 
     @Override
@@ -48,7 +45,8 @@ public class ImageListDataRepository implements ImageRepository {
             @Override
             public void onImageListLoaded(ArrayList<ImageEntity> imageList) {
                 // transform and release
-                imageListRepositoryCallback.onImageListLoaded(mImageEntityDataMapper.tranform(imageList));
+                ImageEntityDataMapper imageEntityDataMapper = new ImageEntityDataMapper();
+                imageListRepositoryCallback.onImageListLoaded(imageEntityDataMapper.tranform(imageList));
             }
 
             @Override

@@ -11,7 +11,6 @@ public class GetImageUseCaseImpl implements GetImageUseCase {
     private final ImageRepository mImageRepository;
 
     private GetImageUseCaseCallback mImageUseCaseCallback;
-    private GetImageListUseCaseCallback mImageListUseCaseCallback;
 
     private final ImageRepository.ImageRepositoryCallback mImageRepositoryCallback = new ImageRepository.ImageRepositoryCallback() {
 
@@ -23,19 +22,6 @@ public class GetImageUseCaseImpl implements GetImageUseCase {
         @Override
         public void onImageError(Exception exception) {
             mImageUseCaseCallback.onImageError(exception);
-        }
-    };
-
-    private final ImageRepository.ImageListRepositoryCallback mImageListRepositoryCallback = new ImageRepository.ImageListRepositoryCallback() {
-
-        @Override
-        public void onImageListLoaded(ArrayList<de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity> imageList) {
-            mImageListUseCaseCallback.onImageListLoaded(imageList);
-        }
-
-        @Override
-        public void onImageListError(Exception exception) {
-            mImageListUseCaseCallback.onImageListError(exception);
         }
     };
 
@@ -55,16 +41,26 @@ public class GetImageUseCaseImpl implements GetImageUseCase {
     }
 
     @Override
-    public void execute(GetImageListUseCaseCallback getImageListUseCaseCallback) {
+    public void execute(final GetImageListUseCaseCallback getImageListUseCaseCallback) {
         if (getImageListUseCaseCallback == null) {
             throw new IllegalArgumentException("Interactor callback cannot be null!");
         }
-        mImageListUseCaseCallback = getImageListUseCaseCallback;
-        run();
+        mImageRepository.getImageList(new ImageRepository.ImageListRepositoryCallback() {
+
+            @Override
+            public void onImageListLoaded(ArrayList<de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity> imageList) {
+                getImageListUseCaseCallback.onImageListLoaded(imageList);
+            }
+
+            @Override
+            public void onImageListError(Exception exception) {
+                getImageListUseCaseCallback.onImageListError(exception);
+            }
+        });
     }
 
     @Override
     public void run() {
-        mImageRepository.getImageList(mImageListRepositoryCallback);
+
     }
 }

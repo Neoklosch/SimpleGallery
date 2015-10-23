@@ -15,19 +15,6 @@ public class ImageGridPresenter implements MVPPresenter {
     private ImageGridView mImageGridView;
     private ImageGridModel mImageGridModel;
 
-    private final ImageGridMVPModel.ImageGridModelCallback mImageGridModelCallback = new ImageGridMVPModel.ImageGridModelCallback() {
-
-        @Override
-        public void onImageListLoaded(ArrayList<ImageEntity> imageList) {
-            mImageGridView.renderImageGrid(imageList);
-        }
-
-        @Override
-        public void onImageListError(Exception exception) {
-            Log.e("ImageGridPresenter", exception.getMessage());
-        }
-    };
-
     public ImageGridPresenter(MVPView view) {
         setView(view);
         setModel(new ImageGridModel(this));
@@ -35,7 +22,18 @@ public class ImageGridPresenter implements MVPPresenter {
 
     @Override
     public void resume() {
-        mImageGridModel.getImageList(mImageGridModelCallback);
+        mImageGridModel.getImageList(new ImageGridMVPModel.ImageGridModelCallback() {
+
+            @Override
+            public void onImageListLoaded(ArrayList<ImageEntity> imageList) {
+                mImageGridView.renderImageGrid(imageList);
+            }
+
+            @Override
+            public void onImageListError(Exception exception) {
+                Log.e("ImageGridPresenter", exception.getMessage());
+            }
+        });
     }
 
     @Override

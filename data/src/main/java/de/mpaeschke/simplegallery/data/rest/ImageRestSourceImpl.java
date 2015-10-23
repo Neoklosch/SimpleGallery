@@ -3,6 +3,8 @@ package de.mpaeschke.simplegallery.data.rest;
 import java.util.ArrayList;
 
 import de.mpaeschke.simplegallery.data.entity.ImageEntity;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by markuspaeschke on 21.10.15.
@@ -31,12 +33,18 @@ public class ImageRestSourceImpl implements ImageRestSource {
     }
 
     @Override
-    public void get(ImageRestSourceCallback imageCacheCallback) {
-        if (mImageEntityList != null) {
-            imageCacheCallback.onImageEntityListLoaded(mImageEntityList);
-        } else {
-            imageCacheCallback.onImageEntityListError(new Exception("List is empty"));
-        }
+    public Observable<ArrayList<ImageEntity>> get() {
+        return Observable.create(new Observable.OnSubscribe<ArrayList<ImageEntity>>() {
+
+            @Override
+            public void call(Subscriber<? super ArrayList<ImageEntity>> subscriber) {
+                if (mImageEntityList != null) {
+                    subscriber.onNext(mImageEntityList);
+                } else {
+                    subscriber.onError(new Exception("List is empty"));
+                }
+            }
+        });
     }
 
     @Override

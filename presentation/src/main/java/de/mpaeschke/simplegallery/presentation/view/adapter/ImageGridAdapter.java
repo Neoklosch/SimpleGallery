@@ -26,6 +26,17 @@ public class ImageGridAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addImage(ImageEntity imageEntity) {
+        if (imageEntity == null) {
+            throw new IllegalArgumentException("imageEntity is necessary!");
+        }
+        if (mImageEntityList == null) {
+            mImageEntityList = new ArrayList<>();
+        }
+        mImageEntityList.add(imageEntity);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mImageEntityList != null ? mImageEntityList.size() : 0;

@@ -1,6 +1,6 @@
 package de.mpaeschke.simplegallery.domain.interactor;
 
-import java.util.ArrayList;
+import rx.Subscriber;
 
 /**
  * This interface represents a execution unit for a use case to get a collection of {@link de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity}.
@@ -8,17 +8,5 @@ import java.util.ArrayList;
  * That callback should be executed in the UI thread.
  */
 public interface GetImageUseCase extends Interactor {
-    interface GetImageUseCaseCallback {
-        void onImageLoaded(de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity imageDomainEntity);
-        void onImageError(Exception exception);
-    }
-
-    interface GetImageListUseCaseCallback {
-        void onImageListLoaded(ArrayList<de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity> imageList);
-        void onImageListError(Exception exception);
-    }
-
-    void execute(GetImageUseCaseCallback getImageUseCaseCallback);
-
-    void execute(GetImageListUseCaseCallback getImageListUseCaseCallback);
+    void execute(final Subscriber subscriber);
 }

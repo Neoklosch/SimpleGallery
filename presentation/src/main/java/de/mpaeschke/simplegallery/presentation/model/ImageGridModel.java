@@ -7,8 +7,12 @@ import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStoreFact
 import de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity;
 import de.mpaeschke.simplegallery.domain.interactor.GetImageUseCase;
 import de.mpaeschke.simplegallery.domain.interactor.GetImageUseCaseImpl;
+import de.mpaeschke.simplegallery.presentation.model.entity.ImageEntity;
 import de.mpaeschke.simplegallery.presentation.model.mapper.ImageEntityMapper;
 import de.mpaeschke.simplegallery.presentation.presenter.MVPPresenter;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by markuspaeschke on 23.10.15.
@@ -33,18 +37,29 @@ public class ImageGridModel implements ImageGridMVPModel {
         mImageUseCase = new GetImageUseCaseImpl(imageListDataRepository);
     }
 
-    public void getImageList(final ImageGridMVPModel.ImageGridModelCallback imageGridMVPModel) {
-        mImageUseCase.execute(new GetImageUseCase.GetImageListUseCaseCallback() {
+    public void getImageList(final Subscriber subscriber) {
+        mImageUseCase.execute(new Subscriber<ArrayList<ImageDomainEntity>>() {
 
             @Override
-            public void onImageListLoaded(ArrayList<ImageDomainEntity> imageList) {
-                ImageEntityMapper imageEntityMapper = new ImageEntityMapper();
-                imageGridMVPModel.onImageListLoaded(imageEntityMapper.transform(imageList));
+            public void onCompleted() {
+
             }
 
             @Override
-            public void onImageListError(Exception exception) {
-                imageGridMVPModel.onImageListError(exception);
+            public void onError(Throwable e) {
+                Observable.just(e).subscribe(subscriber);
+            }
+
+            @Override
+            public void onNext(ArrayList<ImageDomainEntity> imageDomainEntityArrayList) {
+                Observable.just(imageDomainEntityArrayList)
+                        .map(new Func1<ArrayList<ImageDomainEntity>, ArrayList<ImageEntity>>() {
+                    @Override
+                    public ArrayList<ImageEntity> call(ArrayList<ImageDomainEntity> imageDomainEntityArrayList) {
+                        ImageEntityMapper imageEntityMapper = new ImageEntityMapper();
+                        return imageEntityMapper.transform(imageDomainEntityArrayList);
+                    }
+                }).subscribe(subscriber);
             }
         });
     }

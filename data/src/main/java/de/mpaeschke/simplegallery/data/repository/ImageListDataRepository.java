@@ -7,7 +7,11 @@ import de.mpaeschke.simplegallery.data.entity.mapper.ImageEntityDataMapper;
 import de.mpaeschke.simplegallery.data.repository.datasources.ApiImageDataStore;
 import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStore;
 import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStoreFactory;
+import de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity;
 import de.mpaeschke.simplegallery.domain.repository.ImageRepository;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by markuspaeschke on 22.10.15.
@@ -33,25 +37,14 @@ public class ImageListDataRepository implements ImageRepository {
     }
 
     @Override
-    public void getImage(ImageRepositoryCallback imageRepositoryCallback) {
-        // todo: implement it
-    }
-
-    @Override
-    public void getImageList(final ImageListRepositoryCallback imageListRepositoryCallback) {
+    public Observable<ArrayList<ImageDomainEntity>> getImageList() {
         final ImageDataStore imageDataStore = mImageDataStoreFactory.create(ApiImageDataStore.API_IMAGE_DATA_STORE_TYPE);
-        imageDataStore.getImageEntityList(new ImageDataStore.ImageListDataStoreCallback() {
-
+        return imageDataStore.getImageEntityList()
+                .map(new Func1<ArrayList<ImageEntity>, ArrayList<ImageDomainEntity>>() {
             @Override
-            public void onImageListLoaded(ArrayList<ImageEntity> imageList) {
-                // transform and release
+            public ArrayList<ImageDomainEntity> call(ArrayList<ImageEntity> imageEntityArrayList) {
                 ImageEntityDataMapper imageEntityDataMapper = new ImageEntityDataMapper();
-                imageListRepositoryCallback.onImageListLoaded(imageEntityDataMapper.tranform(imageList));
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                imageListRepositoryCallback.onImageListError(exception);
+                return imageEntityDataMapper.tranform(imageEntityArrayList);
             }
         });
     }

@@ -1,12 +1,16 @@
 package de.mpaeschke.simplegallery.presentation.view.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import de.mpaeschke.simplegallery.R;
@@ -59,18 +63,24 @@ public class ImageGridAdapter extends BaseAdapter {
         if(convertView == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.image_grid_entry, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.headline = (TextView) view.findViewById(R.id.headline);
+            viewHolder.image = (ImageView) view.findViewById(R.id.image_grid_entry_image);
             view.setTag(viewHolder);
         } else {
             view = convertView;
             viewHolder = (ViewHolder) view.getTag();
         }
         ImageEntity imageEntity = mImageEntityList.get(position);
-        viewHolder.headline.setText(imageEntity.getName());
+        File imgFile = new  File(imageEntity.getPath());
+        if (imgFile.exists()){
+            Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            viewHolder.image.setImageBitmap(bitmap);
+        } else {
+            viewHolder.image.setImageResource(R.drawable.placeholder_large);
+        }
         return view;
     }
 
     static class ViewHolder {
-        TextView headline;
+        ImageView image;
     }
 }

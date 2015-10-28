@@ -11,6 +11,8 @@ public class ImageDataStoreFactory {
             imageDataStore = new ApiImageDataStore();
         } else if (imageDataStoreType == CacheImageDataStore.CACHE_IMAGE_DATA_STORE_TYPE) {
             imageDataStore = new CacheImageDataStore();
+        } else if (imageDataStoreType == LocalFolderImageDataStore.LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE) {
+            imageDataStore = new LocalFolderImageDataStore();
         } else {
             imageDataStore = null;
         }

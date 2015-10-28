@@ -11,6 +11,11 @@ public class ImageEntity {
         this.name = name;
     }
 
+    public ImageEntity(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
+
     public String getName() {
         return name;
     }

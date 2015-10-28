@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:padding="20dp">
 
-    <TextView
-        android:id="@+id/headline"
+    <ImageView
+        android:id="@+id/image_grid_entry_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

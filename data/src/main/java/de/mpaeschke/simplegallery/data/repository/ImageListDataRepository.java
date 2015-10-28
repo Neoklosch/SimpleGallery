@@ -7,6 +7,7 @@ import de.mpaeschke.simplegallery.data.entity.mapper.ImageEntityDataMapper;
 import de.mpaeschke.simplegallery.data.repository.datasources.ApiImageDataStore;
 import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStore;
 import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStoreFactory;
+import de.mpaeschke.simplegallery.data.repository.datasources.LocalFolderImageDataStore;
 import de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity;
 import de.mpaeschke.simplegallery.domain.repository.ImageRepository;
 import rx.Observable;
@@ -38,7 +39,7 @@ public class ImageListDataRepository implements ImageRepository {
 
     @Override
     public Observable<ArrayList<ImageDomainEntity>> getImageList() {
-        final ImageDataStore imageDataStore = mImageDataStoreFactory.create(ApiImageDataStore.API_IMAGE_DATA_STORE_TYPE);
+        final ImageDataStore imageDataStore = mImageDataStoreFactory.create(LocalFolderImageDataStore.LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE);
         return imageDataStore.getImageEntityList()
                 .map(new Func1<ArrayList<ImageEntity>, ArrayList<ImageDomainEntity>>() {
             @Override

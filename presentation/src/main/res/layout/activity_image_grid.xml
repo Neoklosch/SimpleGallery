@@ -4,29 +4,52 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/keks"
+    <LinearLayout
+        android:id="@+id/activity_image_grid_content_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Do it!"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <Button
-        android:id="@+id/zwei"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Wuhuu" />
+        <GridView
+            android:id="@+id/image_grid"
+            android:numColumns="auto_fit"
+            android:columnWidth="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/drei"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="apfelkuchen" />
+    </LinearLayout>
 
-    <GridView
-        android:id="@+id/image_grid"
-        android:numColumns="auto_fit"
-        android:columnWidth="100dp"
+    <RelativeLayout
+        android:id="@+id/activity_image_grid_empty_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="It's empty"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/activity_image_grid_loading_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/activity_image_grid_progressBar"
+            android:indeterminate="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="?android:attr/progressBarStyleLarge" />
+
+    </RelativeLayout>
 
 </LinearLayout>

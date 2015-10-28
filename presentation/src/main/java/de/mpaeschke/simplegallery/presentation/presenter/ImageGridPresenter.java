@@ -1,11 +1,10 @@
 package de.mpaeschke.simplegallery.presentation.presenter;
 
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-import de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity;
-import de.mpaeschke.simplegallery.presentation.model.ImageGridMVPModel;
 import de.mpaeschke.simplegallery.presentation.model.ImageGridModel;
 import de.mpaeschke.simplegallery.presentation.model.MVPModel;
 import de.mpaeschke.simplegallery.presentation.model.entity.ImageEntity;
@@ -24,6 +23,7 @@ public class ImageGridPresenter implements MVPPresenter {
 
     @Override
     public void resume() {
+        mImageGridView.showLoading();
         mImageGridModel.getImageList(new Subscriber<ArrayList<ImageEntity>>() {
 
             @Override
@@ -33,12 +33,19 @@ public class ImageGridPresenter implements MVPPresenter {
 
             @Override
             public void onError(Throwable e) {
-                Log.e("ImageGridPresenter", e.getMessage());
+                mImageGridView.showEmpty();
             }
 
             @Override
             public void onNext(ArrayList<ImageEntity> imageEntityArrayList) {
                 mImageGridView.renderImageGrid(imageEntityArrayList);
+                // TODO: post delayed only to see the spinner
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageGridView.hideLoading();
+                    }
+                }, 2000);
             }
         });
     }

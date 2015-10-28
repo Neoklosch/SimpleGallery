@@ -1,5 +1,7 @@
 package de.mpaeschke.simplegallery.presentation.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import de.mpaeschke.simplegallery.data.repository.ImageListDataRepository;
@@ -47,7 +49,7 @@ public class ImageGridModel implements ImageGridMVPModel {
 
             @Override
             public void onError(Throwable e) {
-                Observable.just(e).subscribe(subscriber);
+                Observable.error(e).subscribe(subscriber);
             }
 
             @Override

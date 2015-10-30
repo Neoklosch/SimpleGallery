@@ -1,50 +1,45 @@
 package de.mpaeschke.simplegallery.data.cache;
 
-import java.util.ArrayList;
+import android.graphics.Bitmap;
 
-import de.mpaeschke.simplegallery.data.entity.ImageEntity;
 import rx.Observable;
 import rx.Subscriber;
 
-/**
- * Created by markuspaeschke on 22.10.15.
- */
+
 public class ImageCacheImpl implements ImageCache {
+    private ImageLruCache mMemoryCache;
+
+    public ImageCacheImpl() {
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 8;
+        mMemoryCache = ImageLruCache.getInstance(cacheSize);
+    }
+
     @Override
-    public synchronized Observable<ArrayList<ImageEntity>> get() {
-        return Observable.create(new Observable.OnSubscribe<ArrayList<ImageEntity>>() {
+    public synchronized Observable<Bitmap> get(final String key) {
+        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
 
             @Override
-            public void call(Subscriber<? super ArrayList<ImageEntity>> subscriber) {
-                ArrayList<ImageEntity> imageEntityList = new ArrayList<ImageEntity>();
-                imageEntityList.add(new ImageEntity("Cache A"));
-                imageEntityList.add(new ImageEntity("Cache B"));
-                imageEntityList.add(new ImageEntity("Cache C"));
-                imageEntityList.add(new ImageEntity("Cache D"));
-                imageEntityList.add(new ImageEntity("Cache E"));
-                imageEntityList.add(new ImageEntity("Cache F"));
-                imageEntityList.add(new ImageEntity("Cache G"));
-                imageEntityList.add(new ImageEntity("Cache H"));
-                imageEntityList.add(new ImageEntity("Cache I"));
-                imageEntityList.add(new ImageEntity("Cache J"));
-                imageEntityList.add(new ImageEntity("Cache K"));
-                imageEntityList.add(new ImageEntity("Cache L"));
-                imageEntityList.add(new ImageEntity("Cache M"));
-                imageEntityList.add(new ImageEntity("Cache N"));
-                imageEntityList.add(new ImageEntity("Cache O"));
-                imageEntityList.add(new ImageEntity("Cache P"));
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                Bitmap bitmap = mMemoryCache.get(key);
 
-                if (imageEntityList != null) {
-                    subscriber.onNext(imageEntityList);
+                if (bitmap != null) {
+                    subscriber.onNext(bitmap);
                 } else {
-                    subscriber.onError(new Exception("List is empty"));
+                    subscriber.onError(new Exception("Bitmap not in cache"));
                 }
             }
         });
     }
 
     @Override
-    public synchronized void put(ImageEntity imageEntity) {
-        // todo: implement put
+    public synchronized void put(final String key, Bitmap image) {
+        if (!hasKey(key)) {
+            mMemoryCache.put(key, image);
+        }
+    }
+
+    public boolean hasKey(String key) {
+        return mMemoryCache.get(key) != null;
     }
 }

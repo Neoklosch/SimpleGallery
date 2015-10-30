@@ -8,7 +8,12 @@ public class ImageDomainEntity {
     private String path;
 
     public ImageDomainEntity(String name) {
+        this(name, "");
+    }
+
+    public ImageDomainEntity(String name, String path) {
         this.name = name;
+        this.path = path;
     }
 
     public String getName() {

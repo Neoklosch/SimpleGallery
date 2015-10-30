@@ -12,10 +12,17 @@ public class ImageEntityDataMapper {
     public ImageDomainEntity transform(ImageEntity imageEntity) {
         ImageDomainEntity imageDomainEntity = null;
         if (imageEntity != null) {
-            imageDomainEntity = new ImageDomainEntity(imageEntity.getName());
-            imageDomainEntity.setPath(imageEntity.getPath());
+            imageDomainEntity = new ImageDomainEntity(imageEntity.getName(), imageEntity.getPath());
         }
         return imageDomainEntity;
+    }
+
+    public ImageEntity transform(ImageDomainEntity imageDomainEntity) {
+        ImageEntity imageEntity = null;
+        if (imageDomainEntity != null) {
+            imageEntity = new ImageEntity(imageDomainEntity.getName(), imageDomainEntity.getPath());
+        }
+        return imageEntity;
     }
 
     public ArrayList<ImageDomainEntity> tranform(ArrayList<ImageEntity> imageEntityList) {

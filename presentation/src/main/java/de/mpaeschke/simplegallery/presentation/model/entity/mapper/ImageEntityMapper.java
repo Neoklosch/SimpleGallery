@@ -1,4 +1,4 @@
-package de.mpaeschke.simplegallery.presentation.model.mapper;
+package de.mpaeschke.simplegallery.presentation.model.entity.mapper;
 
 import java.util.ArrayList;
 
@@ -13,11 +13,14 @@ public class ImageEntityMapper {
         if (imageDomainEntity == null) {
             throw new IllegalArgumentException("Cannot transform a null value");
         }
+        return new ImageEntity(imageDomainEntity.getName(), imageDomainEntity.getPath());
+    }
 
-        ImageEntity imageEntity = new ImageEntity(imageDomainEntity.getName());
-        imageEntity.setPath(imageDomainEntity.getPath());
-
-        return imageEntity;
+    public ImageDomainEntity transform(ImageEntity imageEntity) {
+        if (imageEntity == null) {
+            throw new IllegalArgumentException("Cannot transform a null value");
+        }
+        return new ImageDomainEntity(imageEntity.getName(), imageEntity.getPath());
     }
 
     public ArrayList<ImageEntity> transform(ArrayList<ImageDomainEntity> imageDomainEntityList) {

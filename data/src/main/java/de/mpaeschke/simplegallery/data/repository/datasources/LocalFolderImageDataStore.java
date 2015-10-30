@@ -1,22 +1,41 @@
 package de.mpaeschke.simplegallery.data.repository.datasources;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 import de.mpaeschke.simplegallery.data.entity.ImageEntity;
 import de.mpaeschke.simplegallery.data.local.ImageFolderLoaderImpl;
-import de.mpaeschke.simplegallery.data.rest.ImageRestSourceImpl;
 import rx.Observable;
 
-/**
- * Created by markuspaeschke on 22.10.15.
- */
+
 public class LocalFolderImageDataStore implements ImageDataStore {
     public final static int LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE = 2;
 
+    ImageFolderLoaderImpl mImageFolderLoader;
+
+    public LocalFolderImageDataStore() {
+        mImageFolderLoader = new ImageFolderLoaderImpl();
+    }
+
     @Override
     public Observable<ArrayList<ImageEntity>> getImageEntityList() {
-        ImageFolderLoaderImpl imageFolderLoader = new ImageFolderLoaderImpl();
-        return imageFolderLoader.get();
+        return mImageFolderLoader.getImageList();
+    }
+
+    @Override
+    public Observable<Bitmap> getImage(final ImageEntity imageEntity) {
+        return mImageFolderLoader.getFullSizeImage(imageEntity);
+    }
+
+    @Override
+    public Observable<Bitmap> getScaledImage(ImageEntity imageEntity, int height, int width) {
+        return mImageFolderLoader.getScaledImage(imageEntity, height, width);
+    }
+
+    @Override
+    public boolean imageExists(ImageEntity imageEntity) {
+        return mImageFolderLoader.imageExists(imageEntity);
     }
 
     @Override

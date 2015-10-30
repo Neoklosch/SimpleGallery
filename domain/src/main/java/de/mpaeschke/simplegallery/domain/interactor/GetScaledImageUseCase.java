@@ -8,21 +8,27 @@ import rx.Scheduler;
 /**
  * Realises the communication between repository interface and interactor interface.
  */
-public class GetImageUseCaseImpl extends UseCase {
+public class GetScaledImageUseCase extends UseCase {
     private final ImageRepository mImageRepository;
     private final ImageDomainEntity mImageDomainEntity;
+    private final int mHeight;
+    private final int mWidth;
 
-    public GetImageUseCaseImpl(ImageDomainEntity imageDomainEntity,
-                               Scheduler subscribeScheduler,
-                               Scheduler observeScheduler,
-                               ImageRepository imageRepository) {
+    public GetScaledImageUseCase(ImageDomainEntity imageDomainEntity,
+                                 int height,
+                                 int width,
+                                 Scheduler subscribeScheduler,
+                                 Scheduler observeScheduler,
+                                 ImageRepository imageRepository) {
         super(subscribeScheduler, observeScheduler);
+        mHeight = height;
+        mWidth = width;
         mImageDomainEntity = imageDomainEntity;
         mImageRepository = imageRepository;
     }
 
     @Override
     protected Observable buildUseCaseObservable() {
-        return mImageRepository.getFullSizeImage(mImageDomainEntity);
+        return mImageRepository.getScaledImage(mImageDomainEntity, mHeight, mWidth);
     }
 }

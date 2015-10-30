@@ -1,5 +1,6 @@
 package de.mpaeschke.simplegallery.presentation.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -38,8 +39,16 @@ public class ImageGridActivity extends AppCompatActivity implements ImageGridVie
         mEmptyWrapper = (RelativeLayout) findViewById(R.id.activity_image_grid_empty_wrapper);
         mLoadingWrapper = (RelativeLayout) findViewById(R.id.activity_image_grid_loading_wrapper);
         mGridView = (GridView) findViewById(R.id.image_grid);
-        mImageGridAdapter = new ImageGridAdapter(this, null);
+        mImageGridAdapter = new ImageGridAdapter(this, mImageGridPresenter, null);
         mGridView.setAdapter(mImageGridAdapter);
+
+        findViewById(R.id.activity_image_grid_detailpage).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ImageGridActivity.this, ImageDetailActivity.class));
+            }
+        });
     }
 
     @Override

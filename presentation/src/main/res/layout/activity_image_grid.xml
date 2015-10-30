@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/activity_image_grid_detailpage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Detailpage" />
+
     <LinearLayout
         android:id="@+id/activity_image_grid_content_wrapper"
         android:layout_width="match_parent"

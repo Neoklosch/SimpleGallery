@@ -1,16 +1,14 @@
 package de.mpaeschke.simplegallery.data.cache;
 
-import java.util.ArrayList;
+import android.graphics.Bitmap;
 
-import de.mpaeschke.simplegallery.data.entity.ImageEntity;
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by markuspaeschke on 22.10.15.
  */
 public interface ImageCache {
-    Observable<ArrayList<ImageEntity>> get();
+    Observable<Bitmap> get(String key);
 
-    void put(ImageEntity imageEntity);
+    void put(String key, Bitmap image);
 }

@@ -8,7 +8,12 @@ public class ImageEntity {
     private String path;
 
     public ImageEntity(String name) {
+        this(name, "");
+    }
+
+    public ImageEntity(String name, String path) {
         this.name = name;
+        this.path = path;
     }
 
     public String getName() {

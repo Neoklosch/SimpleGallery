@@ -25,6 +25,7 @@ public class ImageCacheImpl implements ImageCache {
 
                 if (bitmap != null) {
                     subscriber.onNext(bitmap);
+                    subscriber.onCompleted();
                 } else {
                     subscriber.onError(new Exception("Bitmap not in cache"));
                 }

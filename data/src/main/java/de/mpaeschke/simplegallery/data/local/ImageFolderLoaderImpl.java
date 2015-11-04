@@ -3,6 +3,7 @@ package de.mpaeschke.simplegallery.data.local;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,6 +89,7 @@ public class ImageFolderLoaderImpl implements ImageFolderLoader {
                 }
                 if (bitmap != null) {
                     subscriber.onNext(bitmap);
+                    subscriber.onCompleted();
                 } else {
                     subscriber.onError(new Exception("file not found"));
                 }

@@ -21,26 +21,19 @@ import rx.functions.Func1;
 public class ImageDataRepository implements ImageRepository {
     private static ImageDataRepository INSTANCE;
 
-    public static synchronized ImageDataRepository getInstance(ImageDataStoreFactory imageDataStoreFactory) {
+    public static synchronized ImageDataRepository getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new ImageDataRepository(imageDataStoreFactory);
+            INSTANCE = new ImageDataRepository();
         }
         return INSTANCE;
     }
 
-    private final ImageDataStoreFactory mImageDataStoreFactory;
-
-    protected ImageDataRepository(ImageDataStoreFactory imageDataStoreFactory) {
-        if (imageDataStoreFactory == null) {
-            throw new IllegalArgumentException("Invalid null parameters in constructor!");
-        }
-
-        mImageDataStoreFactory = imageDataStoreFactory;
+    protected ImageDataRepository() {
     }
 
     @Override
     public Observable<ArrayList<ImageDomainEntity>> getImageList() {
-        final ImageDataStore imageDataStore = mImageDataStoreFactory.create(LocalFolderImageDataStore.LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE);
+        final ImageDataStore imageDataStore = ImageDataStoreFactory.getInstance().create(LocalFolderImageDataStore.LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE);
         return imageDataStore.getImageEntityList()
                 .map(new Func1<ArrayList<ImageEntity>, ArrayList<ImageDomainEntity>>() {
             @Override
@@ -77,8 +70,8 @@ public class ImageDataRepository implements ImageRepository {
     }
 
     private ImageDataStore chooseDataStore(ImageEntity imageEntity) {
-        final ImageDataStore cacheImageDataStore = mImageDataStoreFactory.create(CacheImageDataStore.CACHE_IMAGE_DATA_STORE_TYPE);
-        final ImageDataStore localFolderImageDataStore = mImageDataStoreFactory.create(LocalFolderImageDataStore.LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE);
+        final ImageDataStore cacheImageDataStore = ImageDataStoreFactory.getInstance().create(CacheImageDataStore.CACHE_IMAGE_DATA_STORE_TYPE);
+        final ImageDataStore localFolderImageDataStore = ImageDataStoreFactory.getInstance().create(LocalFolderImageDataStore.LOCAL_FOLDER_IMAGE_DATA_STORE_TYPE);
         if (cacheImageDataStore.imageExists(imageEntity)) {
             return cacheImageDataStore;
         }

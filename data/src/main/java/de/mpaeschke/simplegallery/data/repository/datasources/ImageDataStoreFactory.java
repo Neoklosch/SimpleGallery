@@ -4,6 +4,19 @@ package de.mpaeschke.simplegallery.data.repository.datasources;
  * Created by markuspaeschke on 22.10.15.
  */
 public class ImageDataStoreFactory {
+    private static ImageDataStoreFactory INSTANCE;
+
+    public static synchronized ImageDataStoreFactory getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ImageDataStoreFactory();
+        }
+        return INSTANCE;
+    }
+
+    protected ImageDataStoreFactory() {
+
+    }
+
     public ImageDataStore create(int imageDataStoreType) {
         ImageDataStore imageDataStore;
 

@@ -1,31 +1,19 @@
-package de.mpaeschke.simplegallery.presentation.view.adapter;
+package de.mpaeschke.simplegallery.presentation.presenter.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import de.mpaeschke.simplegallery.R;
 import de.mpaeschke.simplegallery.presentation.model.entity.ImageEntity;
 import de.mpaeschke.simplegallery.presentation.presenter.ImageGridPresenter;
-import de.mpaeschke.simplegallery.presentation.presenter.MVPPresenter;
-import rx.Observable;
-import rx.Observer;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class ImageGridAdapter extends BaseAdapter {
     private ArrayList<ImageEntity> mImageEntityList;
@@ -99,7 +87,9 @@ public class ImageGridAdapter extends BaseAdapter {
 
             @Override
             public void onNext(Bitmap bitmap) {
-                viewHolder.image.setImageBitmap(bitmap);
+                if ((int) viewHolder.image.getTag() == position) {
+                    viewHolder.image.setImageBitmap(bitmap);
+                }
             }
         });
 

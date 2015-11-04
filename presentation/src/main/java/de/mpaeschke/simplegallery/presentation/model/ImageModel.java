@@ -3,9 +3,9 @@ package de.mpaeschke.simplegallery.presentation.model;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 import de.mpaeschke.simplegallery.data.repository.ImageDataRepository;
-import de.mpaeschke.simplegallery.data.repository.datasources.ImageDataStoreFactory;
 import de.mpaeschke.simplegallery.domain.entity.ImageDomainEntity;
 import de.mpaeschke.simplegallery.domain.interactor.GetImageListUseCase;
 import de.mpaeschke.simplegallery.domain.interactor.GetImageUseCaseImpl;
@@ -14,6 +14,7 @@ import de.mpaeschke.simplegallery.presentation.model.entity.ImageEntity;
 import de.mpaeschke.simplegallery.presentation.model.entity.mapper.ImageEntityMapper;
 import de.mpaeschke.simplegallery.presentation.presenter.MVPPresenter;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -23,6 +24,8 @@ import rx.schedulers.Schedulers;
 public class ImageModel implements ImageMVPModel {
     private MVPPresenter mPresenter;
     private GetImageUseCaseImpl mImageUseCase;
+
+    private Scheduler mScheduler = Schedulers.from(Executors.newFixedThreadPool(8));
 
     public ImageModel(MVPPresenter presenter) {
         setPresenter(presenter);
@@ -36,8 +39,8 @@ public class ImageModel implements ImageMVPModel {
     @Override
     public void getImage(final ImageEntity imageEntity, final Subscriber subscriber) {
         ImageEntityMapper imageEntityMapper = new ImageEntityMapper();
-        ImageDataRepository imageListDataRepository = ImageDataRepository.getInstance(new ImageDataStoreFactory());
-        mImageUseCase = new GetImageUseCaseImpl(imageEntityMapper.transform(imageEntity), Schedulers.io(), Schedulers.io(), imageListDataRepository);
+        ImageDataRepository imageListDataRepository = ImageDataRepository.getInstance();
+        mImageUseCase = new GetImageUseCaseImpl(imageEntityMapper.transform(imageEntity), mScheduler, mScheduler, imageListDataRepository);
         mImageUseCase.execute(new Subscriber<Object>() {
 
             @Override
@@ -61,7 +64,7 @@ public class ImageModel implements ImageMVPModel {
                                 return (Bitmap) bitmap;
                             }
                         })
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(mScheduler)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(subscriber);
             }
@@ -69,8 +72,8 @@ public class ImageModel implements ImageMVPModel {
     }
 
     public void getImageList(final Subscriber subscriber) {
-        ImageDataRepository imageListDataRepository = ImageDataRepository.getInstance(new ImageDataStoreFactory());
-        GetImageListUseCase mImageUseCase = new GetImageListUseCase(Schedulers.io(), Schedulers.io(), imageListDataRepository);
+        ImageDataRepository imageListDataRepository = ImageDataRepository.getInstance();
+        GetImageListUseCase mImageUseCase = new GetImageListUseCase(mScheduler, mScheduler, imageListDataRepository);
         mImageUseCase.execute(new Subscriber<ArrayList<ImageDomainEntity>>() {
 
             @Override
@@ -94,7 +97,7 @@ public class ImageModel implements ImageMVPModel {
                                 return new ImageEntityMapper().transform(imageDomainEntityArrayList);
                             }
                         })
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(mScheduler)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(subscriber);
             }
@@ -104,8 +107,8 @@ public class ImageModel implements ImageMVPModel {
     @Override
     public void getScaledImage(ImageEntity imageEntity, int height, int width, final Subscriber subscriber) {
         ImageEntityMapper imageEntityMapper = new ImageEntityMapper();
-        ImageDataRepository imageListDataRepository = ImageDataRepository.getInstance(new ImageDataStoreFactory());
-        GetScaledImageUseCase mImageUseCase = new GetScaledImageUseCase(imageEntityMapper.transform(imageEntity), height, width, Schedulers.io(), Schedulers.io(), imageListDataRepository);
+        ImageDataRepository imageListDataRepository = ImageDataRepository.getInstance();
+        GetScaledImageUseCase mImageUseCase = new GetScaledImageUseCase(imageEntityMapper.transform(imageEntity), height, width, mScheduler, mScheduler, imageListDataRepository);
         mImageUseCase.execute(new Subscriber<Object>() {
 
             @Override
@@ -129,7 +132,7 @@ public class ImageModel implements ImageMVPModel {
                                 return (Bitmap) bitmap;
                             }
                         })
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(mScheduler)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(subscriber);
             }

@@ -15,7 +15,7 @@ import de.mpaeschke.simplegallery.presentation.model.entity.ImageEntity;
 import de.mpaeschke.simplegallery.presentation.presenter.ImageGridPresenter;
 import de.mpaeschke.simplegallery.presentation.presenter.MVPPresenter;
 import de.mpaeschke.simplegallery.presentation.view.ImageGridView;
-import de.mpaeschke.simplegallery.presentation.view.adapter.ImageGridAdapter;
+import de.mpaeschke.simplegallery.presentation.presenter.adapter.ImageGridAdapter;
 
 /**
  * Activity that shows a grid with images.

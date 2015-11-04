@@ -1,6 +1,7 @@
 package de.mpaeschke.simplegallery.data.cache;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 import de.mpaeschke.simplegallery.data.entity.ImageEntity;
 import rx.Observable;
@@ -34,6 +35,7 @@ public class ImageListCacheImpl implements ImageListCache {
 
                 if (imageEntityList != null) {
                     subscriber.onNext(imageEntityList);
+                    subscriber.onCompleted();
                 } else {
                     subscriber.onError(new Exception("List is empty"));
                 }
